@@ -1,0 +1,22 @@
+{
+  "name": "ohack13",
+  "version": "0.0.0",
+  "description": "backend api for ohack13",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/samsel/ohack13.git"
+  },
+  "dependencies": {
+    "express": "3.x",
+    "mongodb": "*"
+  },
+  "author": "Sam Selvanathan, Sumit Savla",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/samsel/ohack13/issues"
+  }
+}
