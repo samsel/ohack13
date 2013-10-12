@@ -3,7 +3,7 @@
 	"appid":"",
 	"db": {
 		"url": "mongodb://127.0.0.1:27017/",
-		"name": "",
+		"name": "ofund",
 		"config": {
 			"db": {
 				"native_parser": true

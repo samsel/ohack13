@@ -69,6 +69,6 @@ mongoClient.connect(config.db.url + config.db.name, config.db.config, function(e
 		db.close();
 	});
 
-	app.listen(config.port);
+	app.listen($OPENSHIFT_NODEJS_PORT || config.port);
 
   });
