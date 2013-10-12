@@ -5,7 +5,7 @@ var express = require("express"),
 	app = express();
 
 
-mongoClient.connect(config.db.url + config.db.name, function(err, db) {
+mongoClient.connect(config.db.url + config.db.name, config.db.config, function(err, db) {
     if(err) throw err;
 
     model.init(db);
@@ -27,25 +27,30 @@ mongoClient.connect(config.db.url + config.db.name, function(err, db) {
 		if(err) throw err;
 
 		var query = req.query,
+			page = parseInt((query.page || 1), 10),
 			response = function(results) {
 			res.json(results);
 		};
 
-		if(query.lat && query.long) {
-			model.listByLocation(query.lat, query.long, response);
+		if(query.lat && query.lon) {
+			model.byLocation(query.lat, query.lon, page, response);
 		}
 		else if(query.keyword) {
-			model.search(query.keyword, response);
+			model.byKeyword(query.keyword, page, response);
+		}
+		else if(query.category) {
+			model.byCategory(query.category, page, response);
 		}
 		else {
-			model.default(response);
+			model.default(page, response);
 		}
 
 	});
 
+	process.on("exit", function() {
+		db.close();
+	});
 
-	app.listen(config.port);	 
-
+	app.listen(config.port);
+	
   });
-
-//db.close();

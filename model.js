@@ -1,11 +1,23 @@
 var collection, 
-	format;
+	format,
+	skip,
+	limit = 10,
+	mapper = require("./data/mapper");
 
-format = function(obj) {
+format = function(results) {
 	return {
-		data: obj
+		data: (results || [])
 	};
-}	
+};	
+
+skip = function(pageNumber) {
+	var skip = 0;
+	if(pageNumber && pageNumber > 1) {
+		skip = (pageNumber - 1) * limit;
+	}
+
+	return skip;
+};	
 
 module.exports = {
 
@@ -13,16 +25,41 @@ module.exports = {
 		collection = db.collection("business");
 	},
 
-	listByLocation: function(lat, long, callback) {
-
+	byLocation: function(lat, lon, page, callback) {
+		collection.find({
+			loc: {
+					$near:[lon, lat]
+				}
+			}).skip(skip(page)).limit(limit).toArray(function(err, results) {
+				callback(format(results));
+		}); 
 	},
 
-	search: function(keyword, callback) {
-
+	byKeyword: function(keyword, page, callback) {
+		var regex = {
+			$regex: keyword, 
+			$options: 'i'
+		};
+		collection.find({$or: [{ name: regex },
+								{ city: regex },
+								{ city: regex }]
+                   }).skip(skip(page)).limit(limit).toArray(function(err, results) {
+						callback(format(results));
+		});
 	},
 
-	default: function(callback) {
-		collection.find().sort({"Business Name":-1}).limit(10).toArray(function(err, results) {
+	byCategory: function(category, page, callback) {
+		collection.find({
+			productServiceDescription: { 
+				$in: mapper[category] 
+			}
+		}).skip(skip(page)).limit(limit).toArray(function(err, results) {
+						callback(format(results));
+		});
+	},	
+
+	default: function(page, callback) {
+		collection.find().skip(skip(page)).limit(limit).toArray(function(err, results) {
 			callback(format(results));
 		}); 
 	}

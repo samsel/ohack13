@@ -1,0 +1,41 @@
+MongoDB Commands
+----------------
+
+
+Start MongoDB Shell
+-------------------
+	mongo
+
+
+Stop MongoDB Service
+--------------------
+	mongo
+	use admin
+	db.shutdownServer()
+
+
+Start MongoDB with text search
+------------------------------
+	mongod --setParameter textSearchEnabled=true	
+
+
+List all all databases
+----------------------
+	show dbs;
+
+
+OHack Specific Commands
+-----------------------
+	use hack13;
+	db.business.save({});
+	db.business.ensureIndex({loc:"2d"});
+
+
+Import Ohack Data
+-----------------
+	mongoimport --db hack13 --collection business --file data.json --verbose --jsonArray
+
+
+Drop Database
+-------------
+	db.dropDatabase();
