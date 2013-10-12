@@ -1,4 +1,11 @@
-var collection;
+var collection, 
+	format;
+
+format = function(obj) {
+	return {
+		data: obj
+	};
+}	
 
 module.exports = {
 
@@ -16,7 +23,7 @@ module.exports = {
 
 	default: function(callback) {
 		collection.find().sort({"Business Name":-1}).limit(10).toArray(function(err, results) {
-			callback(results);
+			callback(format(results));
 		}); 
 	}
 };

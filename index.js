@@ -26,15 +26,16 @@ mongoClient.connect(config.db.url + config.db.name, function(err, db) {
 	app.get("/", function(req, res) {
 		if(err) throw err;
 
-		var response = function(results) {
+		var query = req.query,
+			response = function(results) {
 			res.json(results);
 		};
 
-		if(req.params.lat && req.params.long) {
-			model.listByLocation(req.params.lat, response);
+		if(query.lat && query.long) {
+			model.listByLocation(query.lat, query.long, response);
 		}
-		else if(req.params.search) {
-			model.search(req.params.lat, response);
+		else if(query.keyword) {
+			model.search(query.keyword, response);
 		}
 		else {
 			model.default(response);
