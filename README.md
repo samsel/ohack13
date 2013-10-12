@@ -2,7 +2,10 @@
 ###### http://www.hackathon.io/opportunityfund
 
 
-### API Reference
+### Rest api Reference
+
+* api responses follow standard HTTP codes (200 for success, 401 unauthorized, etc)
+* all API calls can take 'page' with values > 1 in query for returning paginated results
 
 #### search by location
 	/?lat=<latitude>&lon=<longitude>
@@ -21,4 +24,28 @@ category could be one of the following
 * restaurant
 * travel
 
-##### all API calls can take 'page' with values > 1 in query for returning paginated results
+
+### Sample response (successful)
+```javascript
+	{
+		"data": [
+			{
+				"name" : <name>,
+				"street" : <street>,
+				"city" : <city>,
+				"zip" : <zip>,
+				"phoneNumber1" : <phoneNumber1>,
+				"phoneNumber2" : <phoneNumber1>
+			}
+		]
+	}
+```
+
+
+### Sample response (error)
+
+```javascript
+	{
+		"error": <description>
+	}
+```
