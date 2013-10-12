@@ -41,7 +41,7 @@ module.exports = {
 			$options: 'i'
 		};
 		collection.find({$or: [{ name: regex },
-								{ city: regex },
+								{ street: regex },
 								{ city: regex }]
                    }).skip(skip(page)).limit(limit).toArray(function(err, results) {
 						callback(format(results));

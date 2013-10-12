@@ -24,18 +24,32 @@ List all all databases
 	show dbs;
 
 
-OHack Specific Commands
------------------------
-	use hack13;
-	db.business.save({});
-	db.business.ensureIndex({loc:"2d"});
+Set Indexes 
+-------------------
+	db.<dbname>.ensureIndex( {<field>: 1 } )
 
 
-Import Ohack Data
------------------
-	mongoimport --db hack13 --collection business --file data.json --verbose --jsonArray
+List of set Indexes 
+-------------------
+	db.<dbname>.getIndexes();
 
 
 Drop Database
 -------------
 	db.dropDatabase();
+
+
+
+-----------------------
+OHack Specific Commands
+-----------------------
+	use hack13;
+	db.business.ensureIndex({loc:"2d"});
+	db.business.ensureIndex( { "name": 1 });
+	db.business.ensureIndex( { "city": 1 });
+	db.business.ensureIndex( { "street": 1 });	
+
+
+Import ohack Data
+-----------------
+	mongoimport --db hack13 --collection business --file data.json --verbose --jsonArray	
