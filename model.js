@@ -1,4 +1,5 @@
 var collection, 
+	logger,
 	format,
 	skip,
 	limit = 10,
@@ -21,8 +22,9 @@ skip = function(pageNumber) {
 
 module.exports = {
 
-	init: function(db) {
+	init: function(db, winston) {
 		collection = db.collection("business");
+		logger = winston;
 	},
 
 	byLocation: function(lat, lon, page, callback) {
@@ -31,6 +33,7 @@ module.exports = {
 					$near:[lon, lat]
 				}
 			}).skip(skip(page)).limit(limit).toArray(function(err, results) {
+				if(err) logger.error(err.message);
 				callback(format(results));
 		}); 
 	},
@@ -44,6 +47,7 @@ module.exports = {
 								{ street: regex },
 								{ city: regex }]
                    }).skip(skip(page)).limit(limit).toArray(function(err, results) {
+                   		if(err) logger.error(err.message);
 						callback(format(results));
 		});
 	},
@@ -54,12 +58,14 @@ module.exports = {
 				$in: mapper[category] 
 			}
 		}).skip(skip(page)).limit(limit).toArray(function(err, results) {
+						if(err) logger.error(err.message);
 						callback(format(results));
 		});
 	},	
 
 	default: function(page, callback) {
 		collection.find().skip(skip(page)).limit(limit).toArray(function(err, results) {
+			if(err) logger.error(err.message);
 			callback(format(results));
 		}); 
 	}

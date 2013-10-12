@@ -2,18 +2,26 @@ var express = require("express"),
 	config = require("./config"),
 	mongoClient = require('mongodb').MongoClient,
 	model = require('./model'),	
-	fs = require('fs'),
+	winston = require('winston'),
+	winstonStream,
 	app = express();
 
-app.use(express.logger({
-	stream: fs.createWriteStream('app.log', {'flags': 'w'})
-}));
+
+winston.add(winston.transports.File, { filename: 'app.log' });
+winston.remove(winston.transports.Console);
+
+winstonStream = {
+	write: function(message, encoding){
+		winston.info(message);
+	}
+};
+app.use(express.logger({stream:winstonStream}));
 
 
 mongoClient.connect(config.db.url + config.db.name, config.db.config, function(err, db) {
     if(err) throw err;
 
-    model.init(db);
+    model.init(db, winston);
 
     // middleware for security
 	app.use(function(req, res, next) {
@@ -29,7 +37,6 @@ mongoClient.connect(config.db.url + config.db.name, config.db.config, function(e
 
 
 	app.get("/", function(req, res) {
-		if(err) throw err;
 
 		var query = req.query,
 			page = parseInt((query.page || 1), 10),
