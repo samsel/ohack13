@@ -2,7 +2,12 @@ var express = require("express"),
 	config = require("./config"),
 	mongoClient = require('mongodb').MongoClient,
 	model = require('./model'),	
+	fs = require('fs'),
 	app = express();
+
+app.use(express.logger({
+	stream: fs.createWriteStream('app.log', {'flags': 'w'})
+}));
 
 
 mongoClient.connect(config.db.url + config.db.name, config.db.config, function(err, db) {
@@ -47,10 +52,16 @@ mongoClient.connect(config.db.url + config.db.name, config.db.config, function(e
 
 	});
 
+	app.get('*', function(req, res) {
+		res.json(404, {
+			error: "resource not found buddy.."
+		});
+	});	
+
 	process.on("exit", function() {
 		db.close();
 	});
 
 	app.listen(config.port);
-	
+
   });
