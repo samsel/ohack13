@@ -3,7 +3,8 @@ var collection,
 	format,
 	skip,
 	limit = 10,
-	mapper = require("./data/mapper");
+	mapper = require("./data/mapper"),
+	data = require("./data/data");
 
 format = function(results) {
 	return {
@@ -25,6 +26,14 @@ module.exports = {
 	init: function(db, winston) {
 		collection = db.collection("business");
 		logger = winston;
+		collection.find().toArray(function(err, results) {
+			if(err) throw err;
+			if(results.length === 0) {
+				collection.insert(data, function (err, inserted) {
+ 					if(err) throw err;
+				});
+			}
+		});
 	},
 
 	byLocation: function(lat, lon, page, callback) {

@@ -1,5 +1,6 @@
 var express = require("express"),
 	config = require("./config"),
+	mongoConfig = require('./mongo'),
 	mongoClient = require('mongodb').MongoClient,
 	model = require('./model'),	
 	winston = require('winston'),
@@ -18,22 +19,23 @@ winstonStream = {
 app.use(express.logger({stream:winstonStream}));
 
 
-mongoClient.connect(config.db.url + config.db.name, config.db.config, function(err, db) {
+
+mongoClient.connect(mongoConfig.url, config.db.config, function(err, db) {
     if(err) throw err;
 
     model.init(db, winston);
 
     // middleware for security
-	app.use(function(req, res, next) {
-		if(req.headers.appid && req.headers.appid === config.appid) {
-			next();
-		}
-		else {
-			res.json(401, {
-				error: "unauthorized api access buddy.."
-			});
-		}
-	});
+	// app.use(function(req, res, next) {
+	// 	if(req.headers.appid && req.headers.appid === config.appid) {
+	// 		next();
+	// 	}
+	// 	else {
+	// 		res.json(401, {
+	// 			error: "unauthorized api access buddy.."
+	// 		});
+	// 	}
+	// });
 
 
 	app.get("/", function(req, res) {
@@ -69,6 +71,6 @@ mongoClient.connect(config.db.url + config.db.name, config.db.config, function(e
 		db.close();
 	});
 
-	app.listen($OPENSHIFT_NODEJS_PORT || config.port);
+	app.listen(process.env.VMC_APP_PORT || config.port);
 
   });

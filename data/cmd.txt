@@ -43,7 +43,7 @@ Drop Database
 -----------------------
 OHack Specific Commands
 -----------------------
-	use hack13;
+	use ofund;
 	db.business.ensureIndex({loc:"2d"});
 	db.business.ensureIndex( { "name": 1 });
 	db.business.ensureIndex( { "city": 1 });
@@ -52,4 +52,13 @@ OHack Specific Commands
 
 Import ohack Data
 -----------------
-	mongoimport --db hack13 --collection business --file data.json --verbose --jsonArray	
+	mongoimport --db hack13 --collection business --file data.json --verbose --jsonArray
+
+
+------------------------
+appFog Specific Commands
+------------------------
+	af login
+	af update ofund
+	af services
+	af tunnel ofund
